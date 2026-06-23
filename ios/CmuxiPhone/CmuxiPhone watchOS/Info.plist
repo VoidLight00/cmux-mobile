@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>Cmux iPhone</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.1.1</string>
+	<key>CFBundleVersion</key>
+	<string>2</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<!-- The bridge speaks plaintext HTTP on the LOCAL network (Bonjour-resolved
+		     LAN IPs and localhost). Scope the cleartext exemption to local
+		     networking instead of NSAllowsArbitraryLoads, which would disable ATS
+		     for the entire public internet. Tailscale MagicDNS (*.ts.net) is
+		     allowed explicitly; reach a Tailscale host by its MagicDNS name rather
+		     than a raw 100.x IP. -->
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>ts.net</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Cmux iPhone needs microphone access to transcribe your voice commands.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Cmux iPhone uses speech recognition to convert your voice commands to text.</string>
+	<key>WKApplication</key>
+	<true/>
+	<key>WKCompanionAppBundleIdentifier</key>
+	<string>$(CMUX_IPHONE_BUNDLE_ID)</string>
+</dict>
+</plist>

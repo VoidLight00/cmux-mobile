@@ -1,0 +1,47 @@
+name: ci
+
+# Runs on every PR and push to main so code is built/tested BEFORE a release,
+# not for the first time during packaging.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  bridge:
+    name: bridge (node unit tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install + test the bridge
+        working-directory: skill/bridge
+        run: |
+          npm ci
+          npm test
+        # Integration tests (test:integration) need a live local cmux + tokens,
+        # so they are intentionally NOT run here.
+      - name: Version consistency (VERSION is the single source of truth)
+        run: node scripts/sync-version.mjs --check
+
+  app:
+    name: app (xcode build)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        working-directory: ios/CmuxiPhone
+        run: xcodegen generate
+      - name: Build (signing disabled)
+        working-directory: ios/CmuxiPhone
+        run: |
+          xcodebuild \
+            -project CmuxiPhone.xcodeproj \
+            -scheme CmuxiPhone \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
+            build

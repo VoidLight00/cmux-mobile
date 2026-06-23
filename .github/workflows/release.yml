@@ -1,0 +1,71 @@
+name: release
+
+# On a published GitHub Release (tag like v0.1.0):
+#   1. build the self-contained, vendored bridge tarball
+#   2. attach it to the release
+#   3. bump url + sha256 in the Homebrew tap (OWNER/homebrew-tap)
+#
+# Prereqs (one-time, in repo Settings → Secrets and variables → Actions):
+#   COMMITTER_TOKEN — a token that can push to your homebrew-tap repo. Prefer a
+#                     FINE-GRAINED PAT scoped to ONLY that tap repo (Contents:
+#                     read/write) over a classic repo+workflow PAT. It is injected
+#                     into the bump step ONLY. See packaging/homebrew/README.md.
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write   # upload the release asset
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    env:
+      # Boolean flag only (true/false) — does NOT expose the token value job-wide;
+      # the token itself is injected solely into the Homebrew bump step below.
+      HAS_TAP_TOKEN: ${{ secrets.COMMITTER_TOKEN != '' }}
+    steps:
+      # Third-party actions are pinned to a full commit SHA (not a movable tag) so
+      # a hijacked/retagged release can't inject code into this token-bearing job.
+      # Trailing comment tracks the human-readable version for upgrades.
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "22"
+
+      - name: Build vendored tarball
+        run: |
+          set -euo pipefail
+          V="${GITHUB_REF_NAME#v}"
+          echo "V=$V" >> "$GITHUB_ENV"
+          stage="dist/cmux-iphone"
+          mkdir -p "$stage/bridge"
+          # Self-contained package: the bridge + the scripts cmux-iphone shells out to.
+          cp -R skill/bridge/. "$stage/bridge/"
+          cp skill/setup.sh skill/setup-hooks.sh "$stage/"
+          cp LICENSE NOTICE.md "$stage/"
+          # Reproducible, prod-only deps (pure JS → safe to vendor, no compile).
+          ( cd "$stage/bridge" && rm -rf node_modules && npm ci --omit=dev )
+          find dist -name '.DS_Store' -delete
+          tar -C dist -czf "cmux-iphone-${V}.tar.gz" cmux-iphone
+          echo "sha256:"; shasum -a 256 "cmux-iphone-${V}.tar.gz"
+
+      - name: Attach tarball to the release
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
+        with:
+          files: cmux-iphone-*.tar.gz
+
+      - name: Bump Homebrew formula in the tap
+        # Skips cleanly when the tap PAT isn't configured (first release / forks).
+        # Set the COMMITTER_TOKEN secret to enable automatic formula bumps.
+        if: ${{ env.HAS_TAP_TOKEN == 'true' }}
+        uses: mislav/bump-homebrew-formula-action@56a283fa15557e9abaa4bdb63b8212abc68e655c # v3.6
+        with:
+          formula-name: cmux-iphone
+          homebrew-tap: ${{ github.repository_owner }}/homebrew-tap
+          download-url: https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/cmux-iphone-${{ env.V }}.tar.gz
+        env:
+          # Token scoped to THIS step only (not the job env).
+          COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}

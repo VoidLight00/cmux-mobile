@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color" content="#0b0b0d">
+<title>Cmux Mobile</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<link rel="icon" type="image/png" href="/icons/icon-192.png">
+<style>
+  :root{ --bg:#0b0b0d; --card:#16161a; --line:#26262c; --txt:#e7e7ea; --dim:#8a8a93;
+         --orange:#d97757; --green:#3fb950; --red:#f0716a; --amber:#d8a657; }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body{ margin:0; height:100%; background:var(--bg); color:var(--txt);
+    font:15px/1.45 -apple-system,system-ui,sans-serif; }
+  body{ display:flex; flex-direction:column; padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+  button{ font:inherit; color:inherit; background:none; border:none; cursor:pointer; }
+  .hidden{ display:none !important; }
+
+  /* Header */
+  header{ display:flex; align-items:center; gap:8px; padding:10px 14px; border-bottom:1px solid var(--line); }
+  header .dot{ width:9px; height:9px; border-radius:50%; background:var(--dim); flex:none; }
+  header .dot.on{ background:var(--green); } header .dot.off{ background:var(--red); }
+  header b{ font-size:15px; } header .sub{ color:var(--dim); font-size:12px; }
+  header .grow{ flex:1; }
+  header button.ic{ font-size:18px; padding:6px 8px; color:var(--dim); }
+
+  /* Pairing */
+  #pair{ flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:24px; gap:14px; text-align:center; }
+  #pair h1{ color:var(--orange); margin:0; font-size:26px; }
+  #pair p{ color:var(--dim); margin:0; font-size:13px; max-width:300px; }
+  #pair input{ width:200px; text-align:center; letter-spacing:8px; font-size:26px; font-family:ui-monospace,monospace;
+    background:var(--card); border:1px solid var(--line); border-radius:12px; color:var(--txt); padding:12px; }
+  #pair .err{ color:var(--red); font-size:13px; min-height:16px; }
+  #pair small{ color:var(--dim); font-size:12px; }
+
+  /* Session tabs */
+  #tabs{ display:flex; gap:7px; overflow-x:auto; padding:9px 12px; border-bottom:1px solid var(--line); -webkit-overflow-scrolling:touch; }
+  .tab{ flex:none; padding:7px 12px; border-radius:9px; background:var(--card); border:1px solid var(--line);
+    font-size:13px; color:var(--dim); display:flex; align-items:center; gap:6px; white-space:nowrap; }
+  .tab.active{ color:var(--txt); border-color:var(--orange); }
+  .tab .badge{ font-size:10px; padding:1px 5px; border-radius:6px; background:#2a2a30; color:var(--dim); }
+  .tab .badge.codex{ color:var(--amber); }
+  .tab .needs{ width:7px; height:7px; border-radius:50%; background:var(--amber); }
+  #tabs:empty::after{ content:"연결된 세션 없음 — Mac에서 claude/codex 실행 중이면 곧 나타납니다"; color:var(--dim); font-size:12px; }
+
+  /* Terminal */
+  #term{ flex:1; overflow-y:auto; padding:12px 14px; font:12.5px/1.5 ui-monospace,monospace; -webkit-overflow-scrolling:touch; }
+  .ln{ white-space:pre-wrap; word-break:break-word; }
+  .ln.command{ color:var(--orange); } .ln.output{ color:var(--txt); }
+  .ln.system{ color:var(--dim); } .ln.error{ color:var(--red); } .ln.add{ color:var(--green); }
+
+  /* Approval */
+  #approve{ position:fixed; left:0; right:0; bottom:0; background:var(--card); border-top:2px solid var(--amber);
+    padding:14px 14px calc(14px + env(safe-area-inset-bottom)); box-shadow:0 -8px 30px rgba(0,0,0,.5); z-index:10; }
+  #approve .ttl{ color:var(--amber); font-size:12px; font-weight:600; margin-bottom:4px; }
+  #approve .desc{ font-size:14px; margin-bottom:12px; word-break:break-word; }
+  #approve .opts{ display:flex; flex-direction:column; gap:8px; }
+  #approve .opt{ padding:13px; border-radius:11px; background:#202027; border:1px solid var(--line); text-align:left; }
+  #approve .opt:active{ background:#2a2a32; }
+  #approve .opt.deny{ border-color:#4a2a2a; } #approve .opt b{ display:block; }
+  #approve .opt small{ color:var(--dim); }
+
+  /* Input bar */
+  #bar{ display:flex; gap:8px; padding:10px 12px calc(10px + env(safe-area-inset-bottom)); border-top:1px solid var(--line); }
+  #bar input{ flex:1; background:var(--card); border:1px solid var(--line); border-radius:11px; color:var(--txt); padding:11px 13px; font-size:15px; }
+  #bar button{ padding:0 16px; border-radius:11px; background:var(--orange); color:#fff; font-weight:600; }
+  #bar button:disabled{ opacity:.4; }
+
+  /* Sheet (Macs / menu) */
+  #sheet{ position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:20; display:flex; align-items:flex-end; }
+  #sheet .panel{ width:100%; background:var(--card); border-radius:16px 16px 0 0; padding:16px 16px calc(20px + env(safe-area-inset-bottom)); }
+  #sheet h3{ margin:0 0 10px; font-size:15px; }
+  .macrow{ display:flex; align-items:center; gap:8px; padding:11px 0; border-bottom:1px solid var(--line); }
+  .macrow .grow{ flex:1; } .macrow small{ color:var(--dim); display:block; }
+  .macrow button.go{ color:var(--orange); padding:6px 10px; }
+  .macrow button.del{ color:var(--red); padding:6px 8px; }
+  #sheet .add{ display:flex; gap:6px; margin-top:12px; }
+  #sheet .add input{ flex:1; background:#202027; border:1px solid var(--line); border-radius:9px; color:var(--txt); padding:9px; font-size:13px; }
+  #sheet .add button{ color:var(--orange); padding:0 10px; }
+  #sheet .danger{ width:100%; margin-top:14px; padding:12px; border-radius:11px; border:1px solid #4a2a2a; color:var(--red); }
+  #sheet .close{ width:100%; margin-top:8px; padding:12px; color:var(--dim); }
+</style>
+</head>
+<body>
+
+<!-- Pairing -->
+<section id="pair">
+  <h1>Cmux iPhone</h1>
+  <p id="pairsub">이 Mac의 6자리 페어링 코드를 입력하세요</p>
+  <input id="code" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="000000" autocomplete="one-time-code">
+  <div class="err" id="pairerr"></div>
+  <small id="pairhost"></small>
+</section>
+
+<!-- Main -->
+<header id="head" class="hidden">
+  <span class="dot" id="dot"></span>
+  <div><b id="mac">Mac</b> <span class="sub" id="agents"></span></div>
+  <span class="grow"></span>
+  <button class="ic" id="macsBtn" title="Macs">⌂</button>
+  <button class="ic" id="menuBtn" title="설정">⋮</button>
+</header>
+<div id="tabs" class="hidden"></div>
+<div id="term" class="hidden"></div>
+
+<!-- Approval -->
+<div id="approve" class="hidden">
+  <div class="ttl">⚠ 승인 필요</div>
+  <div class="desc" id="apdesc"></div>
+  <div class="opts" id="apopts"></div>
+</div>
+
+<!-- Input -->
+<div id="bar" class="hidden">
+  <input id="prompt" placeholder="프롬프트 입력… (라이브 세션에 전송)" enterkeyhint="send">
+  <button id="send">전송</button>
+</div>
+
+<!-- Sheet -->
+<div id="sheet" class="hidden"><div class="panel" id="sheetPanel"></div></div>
+
+<script>
+"use strict";
+const $ = s => document.querySelector(s);
+const ORIGIN = location.origin;
+let token = localStorage.getItem('cw_token_' + location.host) || null;
+let machine = '';
+let es = null;
+const sessions = new Map(); // id -> {id,agent,folderName,cwd,state,lines:[],pending}
+let activeId = null;
+
+/* ---------- helpers ---------- */
+function save(){ if(token) localStorage.setItem('cw_token_'+location.host, token); }
+function logout(){ token=null; localStorage.removeItem('cw_token_'+location.host); if(es){es.close();es=null;} showPair(); }
+async function post(path, body){
+  const r = await fetch(path, { method:'POST',
+    headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+token },
+    body: JSON.stringify(body) });
+  if(r.status===401){ logout(); throw new Error('401'); }
+  return r;
+}
+function basename(p){ return (p||'').split('/').filter(Boolean).pop() || p || ''; }
+
+/* ---------- screens ---------- */
+function showPair(){
+  $('#pair').classList.remove('hidden');
+  ['#head','#tabs','#term','#bar'].forEach(s=>$(s).classList.add('hidden'));
+  $('#approve').classList.add('hidden');
+  $('#pairhost').textContent = '연결 대상: ' + location.host;
+  $('#code').value=''; $('#pairerr').textContent='';
+  setTimeout(()=>$('#code').focus(), 200);
+}
+function showMain(){
+  $('#pair').classList.add('hidden');
+  ['#head','#tabs','#term','#bar'].forEach(s=>$(s).classList.remove('hidden'));
+}
+
+/* ---------- pairing ---------- */
+$('#code').addEventListener('input', e=>{
+  const v = e.target.value.replace(/\D/g,'').slice(0,6);
+  e.target.value=v;
+  if(v.length===6) pair(v);
+});
+async function pair(code){
+  $('#pairerr').textContent='연결 중…';
+  try{
+    const r = await fetch('/pair',{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({code}) });
+    if(r.status===200){
+      const d = await r.json();
+      token = d.token; save();
+      machine = d.machineName || location.host;
+      seedSessions(d.sessions);
+      rememberMac(machine);
+      showMain(); render(); connect();
+    } else if(r.status===429){ $('#pairerr').textContent='시도가 너무 많습니다. 잠시 후 다시.'; }
+    else { const d=await r.json().catch(()=>({})); $('#pairerr').textContent = (d.error||'코드가 틀렸거나 만료됨'); }
+  }catch(err){ $('#pairerr').textContent='브리지에 연결 실패: '+location.host; }
+}
+function seedSessions(arr){
+  (arr||[]).forEach(s=>{
+    if(!sessions.has(s.id)) sessions.set(s.id,{id:s.id,agent:s.agent,folderName:s.folderName||basename(s.cwd),cwd:s.cwd,state:s.state,lines:[],pending:null});
+  });
+  if(!activeId){ const first=[...sessions.values()].find(x=>x.state==='running'); if(first) activeId=first.id; }
+}
+
+/* ---------- SSE ---------- */
+function connect(){
+  if(es) es.close();
+  es = new EventSource('/events?token='+encodeURIComponent(token));
+  es.onopen = ()=> setDot(true);
+  es.onerror = ()=> setDot(false); // EventSource auto-reconnects
+  const on = (n,f)=> es.addEventListener(n, ev=>{ let d={}; try{d=JSON.parse(ev.data);}catch{} f(d); });
+  on('session', onSession);
+  on('tool-output', d=> push(d.sessionId, fmtTool(d)));
+  on('pty-output', d=>{ const t=clean(d.text); if(t) push(d.sessionId,[{t,c:'output'}]); });
+  on('permission-request', onPerm);
+  on('permission-cleared', d=> clearPerm(d.sessionId, d.permissionId));
+  on('stop', d=> push(d.sessionId,[{t:'— stopped —',c:'system'}]));
+  on('task-complete', d=> push(d.sessionId,[{t:'✓ 작업 완료',c:'system'}]));
+  on('error', d=> push(d.sessionId,[{t:(d.error||'error'),c:'error'}]));
+}
+function setDot(ok){ const d=$('#dot'); d.classList.toggle('on',ok); d.classList.toggle('off',!ok); }
+
+function sess(id){
+  if(!id) return null;
+  if(!sessions.has(id)) sessions.set(id,{id,agent:'claude',folderName:'',cwd:'',state:'running',lines:[],pending:null});
+  return sessions.get(id);
+}
+function onSession(d){
+  if(!d.sessionId){ return; } // bridge-level connected, ignore
+  const s = sess(d.sessionId);
+  if(d.agent) s.agent=d.agent;
+  if(d.cwd){ s.cwd=d.cwd; s.folderName=d.folderName||basename(d.cwd); }
+  else if(d.folderName){ s.folderName=d.folderName; }
+  if(d.state==='running'){ s.state='running'; if(!activeId) activeId=s.id; }
+  else if(d.state==='ended'){ s.state='ended'; }
+  render();
+}
+function push(id, lines){
+  const s = sess(id); if(!s||!lines||!lines.length) return;
+  lines.forEach(l=> s.lines.push(l));
+  if(s.lines.length>120) s.lines.splice(0, s.lines.length-120);
+  if(id===activeId) renderTerm();
+  renderTabs();
+}
+function clean(t){ return (t||'').replace(/\x1B\[[0-9;]*[a-zA-Z]/g,'').trim(); }
+
+/* ---------- tool-output formatting ---------- */
+function fmtTool(d){
+  const ti = d.tool_input||{}, name=d.tool_name||'tool', out=d.tool_output;
+  const pre = d.source==='codex' ? '[codex] ' : '';
+  const L=[];
+  if(name==='Bash'){
+    L.push({t:pre+'$ '+(ti.command||''),c:'command'});
+    if(out) clean(out).split('\n').slice(0,6).forEach(x=>{ if(x.trim()) L.push({t:x,c:'output'}); });
+  } else if(name==='Read'){ L.push({t:pre+'Read '+basename(ti.file_path),c:'system'}); }
+  else if(name==='Write'){ L.push({t:pre+'Write '+basename(ti.file_path),c:'system'}); }
+  else if(name==='Edit'){ L.push({t:pre+'Edit '+basename(ti.file_path),c:'system'}); }
+  else if(name==='Grep'){ L.push({t:pre+'grep "'+(ti.pattern||'')+'"',c:'command'}); }
+  else if(name==='CodexMessage'){ if(out) L.push({t:pre+clean(out).slice(0,200),c:'output'}); }
+  else { L.push({t:pre+'['+name+']',c:'system'}); if(out){ const p=clean(out).slice(0,120); if(p) L.push({t:p,c:'output'}); } }
+  return L;
+}
+
+/* ---------- approvals ---------- */
+function parsePerm(d){
+  const ti=d.tool_input||{}, name=d.tool_name||'Unknown';
+  let question=null, desc=name, opts=[];
+  if(Array.isArray(ti.questions) && ti.questions[0]){
+    const q=ti.questions[0]; question=q.question||null;
+    desc = ti.command || q.header || name;
+    opts = (q.options||[]).map(o=>({label:o.label||'', sub:o.description||''}));
+  } else if(ti.file_path){ desc=name+' '+basename(ti.file_path); opts=[{label:'Yes'},{label:'Yes, allow all'},{label:'No'}]; }
+  else if(ti.command){ desc='Run: '+String(ti.command).slice(0,120); opts=[{label:'Yes'},{label:'Yes, allow all'},{label:'No'}]; }
+  else { opts=[{label:'Yes'},{label:'No'}]; }
+  return { permissionId:d.permissionId, question, desc, opts,
+           terminalId:d.terminalId||null, expectedScreenHash:d.screenHash||null };
+}
+function onPerm(d){
+  const s = sess(d.sessionId); if(!s) return;
+  const np = parsePerm(d);
+  // Preserve an in-flight/failed answer across SSE resends (the bridge re-pushes
+  // pending approvals on reconnect) — overwriting would reset submitting back to
+  // a fresh card (double-click) or wipe a 409 error/latest-screen.
+  if(s.pending && s.pending.permissionId===np.permissionId && (s.pending.submitting || s.pending.error)){
+    return;
+  }
+  s.pending = np;
+  activeId = s.id;
+  push(s.id,[{t:'⚠ 승인 요청: '+np.desc,c:'system'}]);
+  render();
+}
+function clearPerm(id, pid){
+  const s = sessions.get(id);
+  if(s && s.pending && (!pid || s.pending.permissionId===pid)){ s.pending=null; }
+  if(!id){ sessions.forEach(x=>{ if(x.pending&&x.pending.permissionId===pid) x.pending=null; }); }
+  render();
+}
+async function respond(p, opt, i){
+  const last = i === p.opts.length-1;
+  let body;
+  if(p.question){ body={ permissionId:p.permissionId, decision:{behavior:'allow'}, selectedOption:opt.label, optionIndex:i }; }
+  else if(/allow all|don't ask/i.test(opt.label)){ body={ permissionId:p.permissionId, decision:{behavior:'allow'}, allowAll:true }; }
+  else if(last){ body={ permissionId:p.permissionId, decision:{behavior:'deny'} }; }
+  else { body={ permissionId:p.permissionId, decision:{behavior:'allow'} }; }
+  // Pin the codex terminal + screen hash so the bridge can fail-closed (409) if
+  // the screen changed or the terminal can't be uniquely identified.
+  if(p.terminalId) body.terminalId = p.terminalId;
+  if(p.expectedScreenHash) body.expectedScreenHash = p.expectedScreenHash;
+  const s = sessions.get(activeId);
+  if(p.submitting) return;        // already in flight
+  p.submitting = true; p.error = null; render();
+  try{
+    const r = await post('/command', body);
+    if(!r.ok){
+      p.submitting = false;
+      if(r.status===409){
+        // Screen changed — pull the fresh hash AND the live screen so the user
+        // re-confirms what they're approving before a retry sends the new hash.
+        const j = await r.json().catch(()=>null);
+        if(j && j.currentHash) p.expectedScreenHash = j.currentHash;
+        if(p.terminalId){
+          try{
+            const sr = await fetch('/cmux/screen?id='+encodeURIComponent(p.terminalId), { headers:{'Authorization':'Bearer '+token} });
+            if(sr.ok){ const sj = await sr.json(); p.latestScreen = sj.text||''; if(sj.hash) p.expectedScreenHash = sj.hash; }
+          }catch(e){}
+        }
+        p.error = '화면이 바뀌었습니다 — 아래 최신 화면 확인 후 다시 누르세요';
+      } else {
+        p.error = '승인 전송 실패 ('+r.status+')';
+      }
+      render();
+      return;
+    }
+    if(s) s.pending=null;          // confirmed — clear only now
+    push(activeId,[{t:'→ '+opt.label, c:last&&!p.question?'error':'command'}]);
+    render();
+  }catch(e){
+    p.submitting = false;
+    p.error = '브리지에 연결할 수 없습니다 — 다시 시도하세요';
+    push(activeId,[{t:'✗ 승인 전송 실패',c:'error'}]);
+    render();
+  }
+}
+
+/* ---------- send prompt ---------- */
+async function sendPrompt(){
+  const inp=$('#prompt'); const t=inp.value.trim(); if(!t||!activeId) return;
+  inp.value='';
+  push(activeId,[{t:'> '+t,c:'command'}]);
+  try{ await post('/command', { command:t+'\n', sessionId:activeId }); }
+  catch(e){ push(activeId,[{t:'전송 실패',c:'error'}]); }
+}
+$('#send').addEventListener('click', sendPrompt);
+$('#prompt').addEventListener('keydown', e=>{ if(e.key==='Enter') sendPrompt(); });
+
+/* ---------- render ---------- */
+function render(){ renderHead(); renderTabs(); renderTerm(); renderApprove(); }
+function renderHead(){ $('#mac').textContent = machine || location.host;
+  const a=[...new Set([...sessions.values()].filter(s=>s.state==='running').map(s=>s.agent))];
+  $('#agents').textContent = a.length? a.join(' · '):''; }
+function renderTabs(){
+  const el=$('#tabs'); el.innerHTML='';
+  [...sessions.values()].filter(s=>s.state==='running').forEach(s=>{
+    const b=document.createElement('button'); b.className='tab'+(s.id===activeId?' active':'');
+    b.innerHTML = (s.pending?'<span class="needs"></span>':'') +
+      '<span>'+esc(s.folderName||'session')+'</span>' +
+      '<span class="badge'+(s.agent==='codex'?' codex':'')+'">'+(s.agent==='codex'?'codex':'claude')+'</span>';
+    b.onclick=()=>{ activeId=s.id; render(); };
+    el.appendChild(b);
+  });
+}
+function renderTerm(){
+  const el=$('#term'); const s=sessions.get(activeId);
+  if(!s){ el.innerHTML=''; return; }
+  el.innerHTML = s.lines.map(l=>'<div class="ln '+(l.c||'output')+'">'+esc(l.t)+'</div>').join('');
+  el.scrollTop = el.scrollHeight;
+}
+function renderApprove(){
+  const s=sessions.get(activeId); const ap=$('#approve');
+  if(!s||!s.pending){ ap.classList.add('hidden'); return; }
+  const p=s.pending; $('#apdesc').textContent=p.desc;
+  const o=$('#apopts'); o.innerHTML='';
+  p.opts.forEach((opt,i)=>{
+    const last=i===p.opts.length-1;
+    const b=document.createElement('button'); b.className='opt'+(last&&!p.question?' deny':'');
+    b.innerHTML='<b>'+esc(opt.label)+'</b>'+(opt.sub?'<small>'+esc(opt.sub)+'</small>':'');
+    b.disabled = !!p.submitting;
+    if(p.submitting) b.style.opacity='0.5';
+    b.onclick=()=>respond(p,opt,i);
+    o.appendChild(b);
+  });
+  if(p.submitting){
+    const d=document.createElement('div'); d.style.cssText='font-size:12px;color:#888;margin-top:6px'; d.textContent='전송 중…';
+    o.appendChild(d);
+  } else if(p.error){
+    const d=document.createElement('div'); d.style.cssText='font-size:12px;color:#e5534b;margin-top:6px'; d.textContent=p.error;
+    o.appendChild(d);
+    if(p.latestScreen){
+      const pre=document.createElement('pre');
+      pre.style.cssText='font-size:10px;line-height:1.3;color:#ddd;background:#0d0d0d;border:1px solid #333;border-radius:6px;padding:8px;margin-top:6px;max-height:140px;overflow:auto;white-space:pre-wrap';
+      pre.textContent = p.latestScreen.split('\n').slice(-24).join('\n');
+      o.appendChild(pre);
+    }
+  }
+  ap.classList.remove('hidden');
+}
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+/* ---------- Macs quick-nav (navigation only, no CORS) ---------- */
+function getMacs(){ try{ return JSON.parse(localStorage.getItem('cw_macs')||'[]'); }catch{ return []; } }
+function setMacs(m){ localStorage.setItem('cw_macs', JSON.stringify(m)); }
+function rememberMac(name){
+  const m=getMacs(); const url=location.origin;
+  if(!m.find(x=>x.url===url)){ m.push({name:name||location.host, url}); setMacs(m); }
+}
+$('#macsBtn').onclick=()=>openMacs();
+function openMacs(){
+  const m=getMacs(); const p=$('#sheetPanel');
+  p.innerHTML='<h3>Macs</h3>';
+  m.forEach((mac,i)=>{
+    const cur = mac.url===location.origin;
+    const row=document.createElement('div'); row.className='macrow';
+    row.innerHTML='<div class="grow"><b>'+esc(mac.name)+(cur?' ✓':'')+'</b><small>'+esc(mac.url)+'</small></div>';
+    if(!cur){ const g=document.createElement('button'); g.className='go'; g.textContent='이동'; g.onclick=()=>location.href=mac.url; row.appendChild(g); }
+    const del=document.createElement('button'); del.className='del'; del.textContent='✕'; del.onclick=()=>{ const a=getMacs().filter(x=>x.url!==mac.url); setMacs(a); openMacs(); }; row.appendChild(del);
+    p.appendChild(row);
+  });
+  const add=document.createElement('div'); add.className='add';
+  add.innerHTML='<input id="newmac" placeholder="http://다른Mac:7860" inputmode="url">';
+  const ab=document.createElement('button'); ab.textContent='추가'; ab.onclick=()=>{ const v=$('#newmac').value.trim(); if(v){ const a=getMacs(); a.push({name:v.replace(/^https?:\/\//,''),url:v.replace(/\/+$/,'')}); setMacs(a); openMacs(); } };
+  add.appendChild(ab); p.appendChild(add);
+  const c=document.createElement('button'); c.className='close'; c.textContent='닫기'; c.onclick=closeSheet; p.appendChild(c);
+  $('#sheet').classList.remove('hidden');
+}
+$('#menuBtn').onclick=()=>{
+  const p=$('#sheetPanel');
+  p.innerHTML='<h3>'+esc(machine||location.host)+'</h3>';
+  const f=document.createElement('button'); f.className='danger'; f.textContent='이 Mac 연결 해제(재페어링)'; f.onclick=()=>{ closeSheet(); logout(); };
+  const c=document.createElement('button'); c.className='close'; c.textContent='닫기'; c.onclick=closeSheet;
+  p.appendChild(f); p.appendChild(c);
+  $('#sheet').classList.remove('hidden');
+};
+function closeSheet(){ $('#sheet').classList.add('hidden'); }
+$('#sheet').addEventListener('click', e=>{ if(e.target.id==='sheet') closeSheet(); });
+
+/* ---------- boot ---------- */
+async function boot(){
+  if(!token){ showPair(); return; }
+  try{
+    const r = await fetch('/status', { headers:{ 'Authorization':'Bearer '+token } });
+    const d = await r.json();
+    machine = d.machineName || location.host;
+    seedSessions(d.sessions);
+    rememberMac(machine);
+    showMain(); render(); connect();
+  }catch(e){ showPair(); }
+}
+boot();
+
+/* PWA: register the shell service worker so Android Chrome / iOS Safari can
+ * install this as a standalone app. Only registers in a secure context
+ * (https or localhost) — over a plain-http Tailscale/LAN IP it's a no-op and
+ * the page still works as a normal browser tab. Use `tailscale serve` for https. */
+if('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost' || location.hostname==='127.0.0.1')){
+  addEventListener('load', ()=> navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>

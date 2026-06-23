@@ -1,0 +1,697 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		02EF9219A19CDC08779B2CDF /* PairingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC1AAA84535F71BA5B6F187E /* PairingView.swift */; };
+		04034CB1143EA49FD23C3829 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67AC3C1A744EE7FDB6F51210 /* KeychainStore.swift */; };
+		05FA715A9E46C404ABCC2325 /* SpeechService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DAB3ADC3B74A47CDE78367 /* SpeechService.swift */; };
+		062F498D1DE108F77E57865E /* ApprovalRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E672CD7F9F14760ECB0BFD4 /* ApprovalRequest.swift */; };
+		19B781CAE529A4783222D952 /* BridgeClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FA7EE3443B8E2763500FCD /* BridgeClient.swift */; };
+		1AAC0E0D171546A21B880644 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 435ABC0FC3DF8D959FCA163B /* Assets.xcassets */; };
+		1B330F14AD04842B8D4BC983 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 91E5127972C90C2B2D6463CD /* Assets.xcassets */; };
+		1C1E67F9CC1E6A2CF4208373 /* VoiceInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2864BC250BF4142401BC20B7 /* VoiceInputView.swift */; };
+		1F7D66A3F2B01CF83E6EF59D /* Connections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FF1C380DC3B64F361DAC45 /* Connections.swift */; };
+		2BF3A527860C127FA28B6DE5 /* ApprovalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2AB3B9E01E4D447B2CD433 /* ApprovalView.swift */; };
+		33EB017EA3A897458BE60B8C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5701C8FECCC64476D3109C1F /* SettingsView.swift */; };
+		34C5C5389CA64D046DBE866A /* WatchViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C193ACD0D9441BB2B5A4FB /* WatchViewState.swift */; };
+		36AE2106F57BECC4D017B9A5 /* SSEClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC8EDE0BBD5F8CF7030B96A /* SSEClient.swift */; };
+		3A3D791C3A627EE5C27F3797 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF86ECCC8B03E7C603ACCAC /* HapticManager.swift */; };
+		3FABB2FBD908181F0727245A /* BonjourDiscovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C127FFDCC12652BD14292A4 /* BonjourDiscovery.swift */; };
+		4F0235C3706F5FD72097BC43 /* CmuxiPhoneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 460C1D865EAAC8C71C7E28D4 /* CmuxiPhoneApp.swift */; };
+		5261854BFDC7E7340C38B2DE /* ApprovalQueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EDBA4248E40E618B337C47 /* ApprovalQueueView.swift */; };
+		57F60015BEC8E0F32B4EF868 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387B5AE30A7086A48CD915DD /* NotificationService.swift */; };
+		59C57575AF115BD3762B0EC5 /* ComplicationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D14933B980CF3840433362F5 /* ComplicationProvider.swift */; };
+		5EBDD130BBDE4A1A6A2E30E9 /* AgentIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E721EF7D2BDEDBB9778EB2 /* AgentIcon.swift */; };
+		66DAA622436FA17269052A67 /* RelayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252A238C5B799AB9508C7166 /* RelayService.swift */; };
+		693E23842522298EE9A01409 /* MultiSessionPager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E467F85159C41ACCB606CC /* MultiSessionPager.swift */; };
+		6D6C03A77987C44C0ADE6444 /* SessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C466DFB2E642600CFD19FC4D /* SessionState.swift */; };
+		6E1B759B6E30C04148C0BCDD /* CodexLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF7F9E2F18CF5FFA411C5E61 /* CodexLogo.swift */; };
+		6E74641F5C77B6D320318C6F /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A3A83749D70337CA6EB43 /* Color+Hex.swift */; };
+		7377A7F468F80042821B98DE /* WatchMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 157132FFD89EF529B72EBB04 /* WatchMessage.swift */; };
+		784A04D58BF1FFC49A8F34A5 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73AE911A92D85820FFD565DC /* OnboardingView.swift */; };
+		7EE3E3251099AC2B2396B52D /* OutputRingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8089E8B3BAC9A14E8CC804DB /* OutputRingBuffer.swift */; };
+		8ED29C327F758D4F2664FB6F /* TerminalLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23B013647A5DB66C7417269 /* TerminalLine.swift */; };
+		928EA85FBC680980166EC73C /* ClaudeMascot.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7023E08E4DDF2476B615DF /* ClaudeMascot.swift */; };
+		9DECDB0352B6B501C0F6CD4D /* OutputRingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8089E8B3BAC9A14E8CC804DB /* OutputRingBuffer.swift */; };
+		A03977C9B094B832F6AF0F51 /* CmuxiPhoneWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 1F60739299C122E1BC53493C /* CmuxiPhoneWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A2E7D1E353BA6B111B164CAA /* SessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C466DFB2E642600CFD19FC4D /* SessionState.swift */; };
+		A6A523428B931B632AF65392 /* CmuxiPhoneWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C0195F8A0992BB2F65FA17A /* CmuxiPhoneWatchApp.swift */; };
+		A85823539DB93997FB6633D1 /* CodexLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF7F9E2F18CF5FFA411C5E61 /* CodexLogo.swift */; };
+		B86AFB0090C0B45879602EC3 /* SessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C87A16953F5DDDCC8BCECDA /* SessionView.swift */; };
+		B877F661B0D7649E18D7E524 /* TerminalLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23B013647A5DB66C7417269 /* TerminalLine.swift */; };
+		BD4D62C7E590A929B0912749 /* WatchMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 157132FFD89EF529B72EBB04 /* WatchMessage.swift */; };
+		C240688527FC4BB796A1E14F /* WatchSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BC4DFBCA272D97929BB610 /* WatchSessionManager.swift */; };
+		C2FE507C34771B501B00C2D4 /* AgentIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E721EF7D2BDEDBB9778EB2 /* AgentIcon.swift */; };
+		CA23980F743AB4251B6BE757 /* StatusDashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313A6B0F766CDCFF3A8C4C58 /* StatusDashboard.swift */; };
+		CA7452E602B4F7C438490135 /* AgentSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64496D304D1187BE528CCDC /* AgentSession.swift */; };
+		CE40C6196C5FE7A9A689D620 /* WatchBridgeClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78BF87CA5F1F80C40C85D7BD /* WatchBridgeClient.swift */; };
+		D3E0EF03F3495E40C334A291 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056A3A83749D70337CA6EB43 /* Color+Hex.swift */; };
+		E2528FD916B14F639BCC4515 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67AC3C1A744EE7FDB6F51210 /* KeychainStore.swift */; };
+		ED267BE086302C0823E1D571 /* AgentSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64496D304D1187BE528CCDC /* AgentSession.swift */; };
+		EEF15FD9254C8E5846A591F1 /* ConnectionStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177BAB8DE1DF85A9322F1B32 /* ConnectionStatusView.swift */; };
+		F11179E2B56E4FAE57B537FA /* Connections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FF1C380DC3B64F361DAC45 /* Connections.swift */; };
+		F4A7919FFE39BA4C145B0956 /* ApprovalRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E672CD7F9F14760ECB0BFD4 /* ApprovalRequest.swift */; };
+		FB710CEBAE7F1F09630161A1 /* WatchSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BC4DFBCA272D97929BB610 /* WatchSessionManager.swift */; };
+		FDB0DBA3CFAA255C1115D193 /* ClaudeMascot.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7023E08E4DDF2476B615DF /* ClaudeMascot.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B0C8A813FB6DCA2581F2F8B8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5E73919EF2FAEF3C312208D9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0D1BE7DF541072934CA7047A;
+			remoteInfo = CmuxiPhoneWatch;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		9585F7BADECAF6263A70C299 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				A03977C9B094B832F6AF0F51 /* CmuxiPhoneWatch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		03C4E122177A343060D26F65 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		056A3A83749D70337CA6EB43 /* Color+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
+		0C127FFDCC12652BD14292A4 /* BonjourDiscovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonjourDiscovery.swift; sourceTree = "<group>"; };
+		157132FFD89EF529B72EBB04 /* WatchMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchMessage.swift; sourceTree = "<group>"; };
+		177BAB8DE1DF85A9322F1B32 /* ConnectionStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionStatusView.swift; sourceTree = "<group>"; };
+		1F60739299C122E1BC53493C /* CmuxiPhoneWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CmuxiPhoneWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		252A238C5B799AB9508C7166 /* RelayService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayService.swift; sourceTree = "<group>"; };
+		2864BC250BF4142401BC20B7 /* VoiceInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceInputView.swift; sourceTree = "<group>"; };
+		2C40DA1D3E10007769FBFA0F /* CmuxiPhone.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CmuxiPhone.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C87A16953F5DDDCC8BCECDA /* SessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionView.swift; sourceTree = "<group>"; };
+		313A6B0F766CDCFF3A8C4C58 /* StatusDashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusDashboard.swift; sourceTree = "<group>"; };
+		31DAB3ADC3B74A47CDE78367 /* SpeechService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechService.swift; sourceTree = "<group>"; };
+		31FF1C380DC3B64F361DAC45 /* Connections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connections.swift; sourceTree = "<group>"; };
+		387B5AE30A7086A48CD915DD /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		3D2AB3B9E01E4D447B2CD433 /* ApprovalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalView.swift; sourceTree = "<group>"; };
+		3D37DE34ADA3D66B48ED2E85 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		435ABC0FC3DF8D959FCA163B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		460C1D865EAAC8C71C7E28D4 /* CmuxiPhoneApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CmuxiPhoneApp.swift; sourceTree = "<group>"; };
+		4E672CD7F9F14760ECB0BFD4 /* ApprovalRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalRequest.swift; sourceTree = "<group>"; };
+		54FA7EE3443B8E2763500FCD /* BridgeClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgeClient.swift; sourceTree = "<group>"; };
+		5701C8FECCC64476D3109C1F /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		60EDBA4248E40E618B337C47 /* ApprovalQueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalQueueView.swift; sourceTree = "<group>"; };
+		63BC4DFBCA272D97929BB610 /* WatchSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchSessionManager.swift; sourceTree = "<group>"; };
+		67AC3C1A744EE7FDB6F51210 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
+		73AE911A92D85820FFD565DC /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		78BF87CA5F1F80C40C85D7BD /* WatchBridgeClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchBridgeClient.swift; sourceTree = "<group>"; };
+		79C193ACD0D9441BB2B5A4FB /* WatchViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchViewState.swift; sourceTree = "<group>"; };
+		8089E8B3BAC9A14E8CC804DB /* OutputRingBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutputRingBuffer.swift; sourceTree = "<group>"; };
+		8C0195F8A0992BB2F65FA17A /* CmuxiPhoneWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CmuxiPhoneWatchApp.swift; sourceTree = "<group>"; };
+		91E5127972C90C2B2D6463CD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9BC8EDE0BBD5F8CF7030B96A /* SSEClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSEClient.swift; sourceTree = "<group>"; };
+		A8E467F85159C41ACCB606CC /* MultiSessionPager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiSessionPager.swift; sourceTree = "<group>"; };
+		B23B013647A5DB66C7417269 /* TerminalLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalLine.swift; sourceTree = "<group>"; };
+		C466DFB2E642600CFD19FC4D /* SessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionState.swift; sourceTree = "<group>"; };
+		C64496D304D1187BE528CCDC /* AgentSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentSession.swift; sourceTree = "<group>"; };
+		CE7023E08E4DDF2476B615DF /* ClaudeMascot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeMascot.swift; sourceTree = "<group>"; };
+		D14933B980CF3840433362F5 /* ComplicationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationProvider.swift; sourceTree = "<group>"; };
+		EAF86ECCC8B03E7C603ACCAC /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		EF7F9E2F18CF5FFA411C5E61 /* CodexLogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexLogo.swift; sourceTree = "<group>"; };
+		F0E721EF7D2BDEDBB9778EB2 /* AgentIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentIcon.swift; sourceTree = "<group>"; };
+		FC1AAA84535F71BA5B6F187E /* PairingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		02A5D14D7E158C7426F12772 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				8C0195F8A0992BB2F65FA17A /* CmuxiPhoneWatchApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		04FE966086CE2183F96549FC /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				60EDBA4248E40E618B337C47 /* ApprovalQueueView.swift */,
+				177BAB8DE1DF85A9322F1B32 /* ConnectionStatusView.swift */,
+				FC1AAA84535F71BA5B6F187E /* PairingView.swift */,
+				5701C8FECCC64476D3109C1F /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2F4C89A5EFCF4FB7D6E0E650 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				F0E721EF7D2BDEDBB9778EB2 /* AgentIcon.swift */,
+				CE7023E08E4DDF2476B615DF /* ClaudeMascot.swift */,
+				EF7F9E2F18CF5FFA411C5E61 /* CodexLogo.swift */,
+				056A3A83749D70337CA6EB43 /* Color+Hex.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		6515EB61A1BFE72EE53C1796 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				D48C0E108E95EA5E9D546EB9 /* Connectivity */,
+				2F4C89A5EFCF4FB7D6E0E650 /* Extensions */,
+				8F1FEC7C2E3A20C5A221DE30 /* Models */,
+				88A662A1A761D6F35F1D316D /* Services */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		6815AE2AC47881FAF3BD6A30 /* CmuxiPhone watchOS */ = {
+			isa = PBXGroup;
+			children = (
+				435ABC0FC3DF8D959FCA163B /* Assets.xcassets */,
+				03C4E122177A343060D26F65 /* Info.plist */,
+				02A5D14D7E158C7426F12772 /* App */,
+				E98E04CC4C0DF8A5F514A631 /* Complications */,
+				9B82969A855B1D6D41D83224 /* Services */,
+				C101A3E1ADE03FE4EE7B2606 /* Views */,
+			);
+			path = "CmuxiPhone watchOS";
+			sourceTree = "<group>";
+		};
+		78C559C9E22F60F75E47F964 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				460C1D865EAAC8C71C7E28D4 /* CmuxiPhoneApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		88A662A1A761D6F35F1D316D /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				67AC3C1A744EE7FDB6F51210 /* KeychainStore.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		8F1FEC7C2E3A20C5A221DE30 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C64496D304D1187BE528CCDC /* AgentSession.swift */,
+				4E672CD7F9F14760ECB0BFD4 /* ApprovalRequest.swift */,
+				31FF1C380DC3B64F361DAC45 /* Connections.swift */,
+				8089E8B3BAC9A14E8CC804DB /* OutputRingBuffer.swift */,
+				C466DFB2E642600CFD19FC4D /* SessionState.swift */,
+				B23B013647A5DB66C7417269 /* TerminalLine.swift */,
+				157132FFD89EF529B72EBB04 /* WatchMessage.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		9478CE71407262C6F525FF2C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2C40DA1D3E10007769FBFA0F /* CmuxiPhone.app */,
+				1F60739299C122E1BC53493C /* CmuxiPhoneWatch.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9B82969A855B1D6D41D83224 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				EAF86ECCC8B03E7C603ACCAC /* HapticManager.swift */,
+				31DAB3ADC3B74A47CDE78367 /* SpeechService.swift */,
+				78BF87CA5F1F80C40C85D7BD /* WatchBridgeClient.swift */,
+				79C193ACD0D9441BB2B5A4FB /* WatchViewState.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		A91184C613C84CFDCB52D7BF /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				0C127FFDCC12652BD14292A4 /* BonjourDiscovery.swift */,
+				54FA7EE3443B8E2763500FCD /* BridgeClient.swift */,
+				9BC8EDE0BBD5F8CF7030B96A /* SSEClient.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		AD44C00025A43D2A76D9CEF1 /* CmuxiPhone iOS */ = {
+			isa = PBXGroup;
+			children = (
+				91E5127972C90C2B2D6463CD /* Assets.xcassets */,
+				3D37DE34ADA3D66B48ED2E85 /* Info.plist */,
+				78C559C9E22F60F75E47F964 /* App */,
+				A91184C613C84CFDCB52D7BF /* Networking */,
+				FE9B316F08BDB86B2751C7C9 /* Services */,
+				04FE966086CE2183F96549FC /* Views */,
+			);
+			path = "CmuxiPhone iOS";
+			sourceTree = "<group>";
+		};
+		C101A3E1ADE03FE4EE7B2606 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3D2AB3B9E01E4D447B2CD433 /* ApprovalView.swift */,
+				A8E467F85159C41ACCB606CC /* MultiSessionPager.swift */,
+				73AE911A92D85820FFD565DC /* OnboardingView.swift */,
+				2C87A16953F5DDDCC8BCECDA /* SessionView.swift */,
+				313A6B0F766CDCFF3A8C4C58 /* StatusDashboard.swift */,
+				2864BC250BF4142401BC20B7 /* VoiceInputView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		C380294B85BD2F26D219EF5D = {
+			isa = PBXGroup;
+			children = (
+				AD44C00025A43D2A76D9CEF1 /* CmuxiPhone iOS */,
+				6815AE2AC47881FAF3BD6A30 /* CmuxiPhone watchOS */,
+				6515EB61A1BFE72EE53C1796 /* Shared */,
+				9478CE71407262C6F525FF2C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D48C0E108E95EA5E9D546EB9 /* Connectivity */ = {
+			isa = PBXGroup;
+			children = (
+				63BC4DFBCA272D97929BB610 /* WatchSessionManager.swift */,
+			);
+			path = Connectivity;
+			sourceTree = "<group>";
+		};
+		E98E04CC4C0DF8A5F514A631 /* Complications */ = {
+			isa = PBXGroup;
+			children = (
+				D14933B980CF3840433362F5 /* ComplicationProvider.swift */,
+			);
+			path = Complications;
+			sourceTree = "<group>";
+		};
+		FE9B316F08BDB86B2751C7C9 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				387B5AE30A7086A48CD915DD /* NotificationService.swift */,
+				252A238C5B799AB9508C7166 /* RelayService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0D1BE7DF541072934CA7047A /* CmuxiPhoneWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E7BE8B4BE6315114C5F075A6 /* Build configuration list for PBXNativeTarget "CmuxiPhoneWatch" */;
+			buildPhases = (
+				88997E66BFFBACBF0143BC86 /* Sources */,
+				461B0A60A4FAEE80ADA20C38 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CmuxiPhoneWatch;
+			packageProductDependencies = (
+			);
+			productName = CmuxiPhoneWatch;
+			productReference = 1F60739299C122E1BC53493C /* CmuxiPhoneWatch.app */;
+			productType = "com.apple.product-type.application";
+		};
+		7ABA176C75704E464E61F3AC /* CmuxiPhone */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 42A33D72F2D323E59172B61C /* Build configuration list for PBXNativeTarget "CmuxiPhone" */;
+			buildPhases = (
+				9271318324C97BE6243C958A /* Sources */,
+				EFE292B37894C4C45638358D /* Resources */,
+				9585F7BADECAF6263A70C299 /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D77DCF4BFD760BCE8C5F3B5D /* PBXTargetDependency */,
+			);
+			name = CmuxiPhone;
+			packageProductDependencies = (
+			);
+			productName = CmuxiPhone;
+			productReference = 2C40DA1D3E10007769FBFA0F /* CmuxiPhone.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5E73919EF2FAEF3C312208D9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 7A4C62771399EF30113A89D6 /* Build configuration list for PBXProject "CmuxiPhone" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = C380294B85BD2F26D219EF5D;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 9478CE71407262C6F525FF2C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7ABA176C75704E464E61F3AC /* CmuxiPhone */,
+				0D1BE7DF541072934CA7047A /* CmuxiPhoneWatch */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		461B0A60A4FAEE80ADA20C38 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1AAC0E0D171546A21B880644 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EFE292B37894C4C45638358D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1B330F14AD04842B8D4BC983 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		88997E66BFFBACBF0143BC86 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C2FE507C34771B501B00C2D4 /* AgentIcon.swift in Sources */,
+				CA7452E602B4F7C438490135 /* AgentSession.swift in Sources */,
+				F4A7919FFE39BA4C145B0956 /* ApprovalRequest.swift in Sources */,
+				2BF3A527860C127FA28B6DE5 /* ApprovalView.swift in Sources */,
+				928EA85FBC680980166EC73C /* ClaudeMascot.swift in Sources */,
+				A6A523428B931B632AF65392 /* CmuxiPhoneWatchApp.swift in Sources */,
+				6E1B759B6E30C04148C0BCDD /* CodexLogo.swift in Sources */,
+				D3E0EF03F3495E40C334A291 /* Color+Hex.swift in Sources */,
+				59C57575AF115BD3762B0EC5 /* ComplicationProvider.swift in Sources */,
+				F11179E2B56E4FAE57B537FA /* Connections.swift in Sources */,
+				3A3D791C3A627EE5C27F3797 /* HapticManager.swift in Sources */,
+				04034CB1143EA49FD23C3829 /* KeychainStore.swift in Sources */,
+				693E23842522298EE9A01409 /* MultiSessionPager.swift in Sources */,
+				784A04D58BF1FFC49A8F34A5 /* OnboardingView.swift in Sources */,
+				7EE3E3251099AC2B2396B52D /* OutputRingBuffer.swift in Sources */,
+				6D6C03A77987C44C0ADE6444 /* SessionState.swift in Sources */,
+				B86AFB0090C0B45879602EC3 /* SessionView.swift in Sources */,
+				05FA715A9E46C404ABCC2325 /* SpeechService.swift in Sources */,
+				CA23980F743AB4251B6BE757 /* StatusDashboard.swift in Sources */,
+				B877F661B0D7649E18D7E524 /* TerminalLine.swift in Sources */,
+				1C1E67F9CC1E6A2CF4208373 /* VoiceInputView.swift in Sources */,
+				CE40C6196C5FE7A9A689D620 /* WatchBridgeClient.swift in Sources */,
+				7377A7F468F80042821B98DE /* WatchMessage.swift in Sources */,
+				C240688527FC4BB796A1E14F /* WatchSessionManager.swift in Sources */,
+				34C5C5389CA64D046DBE866A /* WatchViewState.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9271318324C97BE6243C958A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5EBDD130BBDE4A1A6A2E30E9 /* AgentIcon.swift in Sources */,
+				ED267BE086302C0823E1D571 /* AgentSession.swift in Sources */,
+				5261854BFDC7E7340C38B2DE /* ApprovalQueueView.swift in Sources */,
+				062F498D1DE108F77E57865E /* ApprovalRequest.swift in Sources */,
+				3FABB2FBD908181F0727245A /* BonjourDiscovery.swift in Sources */,
+				19B781CAE529A4783222D952 /* BridgeClient.swift in Sources */,
+				FDB0DBA3CFAA255C1115D193 /* ClaudeMascot.swift in Sources */,
+				4F0235C3706F5FD72097BC43 /* CmuxiPhoneApp.swift in Sources */,
+				A85823539DB93997FB6633D1 /* CodexLogo.swift in Sources */,
+				6E74641F5C77B6D320318C6F /* Color+Hex.swift in Sources */,
+				EEF15FD9254C8E5846A591F1 /* ConnectionStatusView.swift in Sources */,
+				1F7D66A3F2B01CF83E6EF59D /* Connections.swift in Sources */,
+				E2528FD916B14F639BCC4515 /* KeychainStore.swift in Sources */,
+				57F60015BEC8E0F32B4EF868 /* NotificationService.swift in Sources */,
+				9DECDB0352B6B501C0F6CD4D /* OutputRingBuffer.swift in Sources */,
+				02EF9219A19CDC08779B2CDF /* PairingView.swift in Sources */,
+				66DAA622436FA17269052A67 /* RelayService.swift in Sources */,
+				36AE2106F57BECC4D017B9A5 /* SSEClient.swift in Sources */,
+				A2E7D1E353BA6B111B164CAA /* SessionState.swift in Sources */,
+				33EB017EA3A897458BE60B8C /* SettingsView.swift in Sources */,
+				8ED29C327F758D4F2664FB6F /* TerminalLine.swift in Sources */,
+				BD4D62C7E590A929B0912749 /* WatchMessage.swift in Sources */,
+				FB710CEBAE7F1F09630161A1 /* WatchSessionManager.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D77DCF4BFD760BCE8C5F3B5D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0D1BE7DF541072934CA7047A /* CmuxiPhoneWatch */;
+			targetProxy = B0C8A813FB6DCA2581F2F8B8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0BD5F6FDB14F8FE1A65896A5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "CmuxiPhone iOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(CMUX_IPHONE_BUNDLE_ID)";
+				PRODUCT_NAME = "Cmux iPhone";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		67352C7D69AF3EA7F5322E7F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "arm64 arm64e arm64_32";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"EXCLUDED_ARCHS[sdk=watchsimulator*]" = arm64e;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "CmuxiPhone watchOS/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(CMUX_IPHONE_BUNDLE_ID).watchkitapp";
+				PRODUCT_NAME = "Cmux iPhone Watch App";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				TARGETED_DEVICE_FAMILY = 4;
+			};
+			name = Debug;
+		};
+		831F1430B1D7436DC2153E79 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CMUX_IPHONE_BUNDLE_ID = com.limseungwon.cmuxiphone;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
+		C135D6DDF3D1585365F60C6D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "CmuxiPhone iOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(CMUX_IPHONE_BUNDLE_ID)";
+				PRODUCT_NAME = "Cmux iPhone";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		E78FE6297C3BAE2E80DBCAD3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "arm64 arm64e arm64_32";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"EXCLUDED_ARCHS[sdk=watchsimulator*]" = arm64e;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "CmuxiPhone watchOS/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "$(CMUX_IPHONE_BUNDLE_ID).watchkitapp";
+				PRODUCT_NAME = "Cmux iPhone Watch App";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
+				TARGETED_DEVICE_FAMILY = 4;
+			};
+			name = Release;
+		};
+		F2F797443B8B5A5B7481721B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CMUX_IPHONE_BUNDLE_ID = com.limseungwon.cmuxiphone;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		42A33D72F2D323E59172B61C /* Build configuration list for PBXNativeTarget "CmuxiPhone" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0BD5F6FDB14F8FE1A65896A5 /* Debug */,
+				C135D6DDF3D1585365F60C6D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		7A4C62771399EF30113A89D6 /* Build configuration list for PBXProject "CmuxiPhone" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F2F797443B8B5A5B7481721B /* Debug */,
+				831F1430B1D7436DC2153E79 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E7BE8B4BE6315114C5F075A6 /* Build configuration list for PBXNativeTarget "CmuxiPhoneWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				67352C7D69AF3EA7F5322E7F /* Debug */,
+				E78FE6297C3BAE2E80DBCAD3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5E73919EF2FAEF3C312208D9 /* Project object */;
+}

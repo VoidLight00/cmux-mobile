@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+title: "Cmux Mobile"
+message: "Cross-platform (iOS + Android) PWA fork of cmux-iphone."
+type: software
+authors:
+  - name: "VoidLight00"
+repository-code: "https://github.com/VoidLight00/cmux-mobile"
+license: MIT
+references:
+  - type: software
+    title: "cmux-iphone"
+    authors:
+      - name: "lim-won"
+    repository-code: "https://github.com/lim-won/cmux-iphone"
+    license: MIT

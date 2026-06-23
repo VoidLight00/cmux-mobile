@@ -1,0 +1,104 @@
+// lib/config.js — single source of truth for ports, paths, and secrets.
+//
+// Both the bridge (server.js) and the cmux-iphone CLI read from here. Values
+// come from config.json (if present) merged over built-in defaults; env vars
+// still override at runtime (PORT, CMUX_IPHONE_HOOK_PORT, CMUX_BIN, …).
+//
+// Storage lives under ~/Library/Application Support/cmux-iphone (secrets/tokens),
+// ~/Library/Logs/cmux-iphone, and ~/.config/cmux-iphone (cmux password).
+
+import os from "node:os";
+import path from "node:path";
+import fs from "node:fs";
+
+const HOME = os.homedir();
+const DATA_DIR = path.join(HOME, "Library", "Application Support", "cmux-iphone");
+const LOG_DIR = path.join(HOME, "Library", "Logs", "cmux-iphone");
+const CONFIG_FILE = path.join(DATA_DIR, "config.json");
+
+export const paths = {
+  dataDir: DATA_DIR,
+  logDir: LOG_DIR,
+  configFile: CONFIG_FILE,
+  sessionTokenFile: path.join(DATA_DIR, "session-token"), // legacy single token (migrated)
+  devicesFile: path.join(DATA_DIR, "devices.json"),       // per-device tokens
+  hookSecretFile: path.join(DATA_DIR, "hook-secret"),
+  cmuxPasswordFile: path.join(HOME, ".config", "cmux-iphone", "cmux-password"),
+  runtimeFile: path.join(DATA_DIR, "runtime.json"),     // actual bound port/pid (written by server)
+  plistLabel: "com.cmuxiphone.bridge",
+  launchAgentPlist: path.join(HOME, "Library", "LaunchAgents", "com.cmuxiphone.bridge.plist"),
+};
+
+const DEFAULTS = {
+  version: 1,
+  ports: { apiPort: 7860, apiPortRangeEnd: 7869, hookPort: 7861 },
+  // Interface the phone-facing listener binds to. SECURE DEFAULT: "127.0.0.1"
+  // (loopback only) so a fresh install is never reachable over plaintext HTTP by
+  // anyone else on the LAN. Exposing the bridge to your phone is an explicit
+  // opt-in — set this to a Tailscale IP (e.g. "100.x.y.z", encrypted; preferred)
+  // or to "0.0.0.0" for the whole LAN (plaintext — same-network eavesdropping
+  // risk). Env HOST overrides at runtime; `cmux-iphone setup` writes the choice.
+  bindAddress: "127.0.0.1",
+  cmux: { enabled: null, bin: null }, // enabled:null = auto-detect at runtime
+  // Pairing. `fixedCode` is the SINGLE source of truth the server reads:
+  //   set   → FIXED per-machine code (default; persisted by `setup`, rate-limited)
+  //   null  → ROTATING (fresh code per restart, `ttlMs` TTL, cleared after pairing)
+  // `cmux-iphone setup --rotating` clears fixedCode to opt into rotating.
+  pairing: { fixedCode: null, ttlMs: 24 * 60 * 60 * 1000 },
+  runner: null, // "cmux" | "launchd" — chosen at setup
+};
+
+function loadRaw() {
+  try {
+    const j = JSON.parse(fs.readFileSync(CONFIG_FILE, "utf-8"));
+    return j && typeof j === "object" ? j : {};
+  } catch {
+    return {};
+  }
+}
+
+/** Merged config (defaults <- config.json). Env overrides are applied by callers. */
+export function getConfig() {
+  const raw = loadRaw();
+  return {
+    ...DEFAULTS,
+    ...raw,
+    ports: { ...DEFAULTS.ports, ...(raw.ports || {}) },
+    cmux: { ...DEFAULTS.cmux, ...(raw.cmux || {}) },
+    pairing: { ...DEFAULTS.pairing, ...(raw.pairing || {}) },
+  };
+}
+
+/** Shallow-merge a patch into config.json (creates it 0600 if absent). Never clobbers. */
+export function saveConfig(patch) {
+  const cur = loadRaw();
+  const next = { ...cur, ...patch };
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+  fs.writeFileSync(CONFIG_FILE, JSON.stringify(next, null, 2), { mode: 0o600 });
+  return next;
+}
+
+/** Runtime facts the server writes after it actually binds (real port may differ
+ *  from the configured start if it was busy). Read by the CLI so `status`/`doctor`
+ *  probe the port the bridge is REALLY on. Returns {} when absent/unreadable. */
+export function getRuntime() {
+  try {
+    const j = JSON.parse(fs.readFileSync(paths.runtimeFile, "utf-8"));
+    return j && typeof j === "object" ? j : {};
+  } catch {
+    return {};
+  }
+}
+
+/** Persist the actually-bound runtime port/pid (0600). Best-effort. */
+export function writeRuntime(info) {
+  try {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+    fs.writeFileSync(paths.runtimeFile, JSON.stringify(info, null, 2), { mode: 0o600 });
+  } catch { /* best-effort */ }
+}
+
+/** Remove the runtime file (on graceful shutdown) so a stale port can't mislead. */
+export function clearRuntime() {
+  try { fs.rmSync(paths.runtimeFile, { force: true }); } catch { /* ignore */ }
+}
