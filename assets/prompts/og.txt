@@ -1,0 +1,14 @@
+# /gi prompt — kind=og — project=cmux-mobile
+# 7-axis (photo-prompts-master) enforced. 종횡비 명시 필수. 본 파일을 /gi 에 전달.
+
+SUBJECT: social preview / open graph card for 'cmux-mobile' with bold title and subtitle
+CAMERA/LENS: editorial wide composition, 35mm equivalent, balanced depth
+LIGHT: soft directional key light, gentle rim, professional studio neutrality
+FILM/COLOR: modern flat-tech palette, restrained accent color, high legibility
+COMPOSITION: clear focal hierarchy, generous negative space, rule-of-thirds
+MOOD: confident, premium, trustworthy open-source aesthetic
+ASPECT_RATIO: 1200x630 (1.91:1 social card)
+DETAIL: crisp vector-like edges, no clutter, print-grade sharpness
+
+NEGATIVE: no fake brand logos, no pixel-copied UI, no distorted korean/latin text,
+  no watermark, no lorem ipsum, no extra fingers/limbs, no gibberish labels, no signature

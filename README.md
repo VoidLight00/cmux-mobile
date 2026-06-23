@@ -11,6 +11,10 @@
   <img src="https://img.shields.io/badge/install-PWA-purple.svg" alt="PWA"/>
 </p>
 
+<p align="center">
+  <img src="assets/hero.png" alt="Cmux Mobile" width="100%"/>
+</p>
+
 ---
 
 ## What this is
@@ -38,6 +42,10 @@ no Kotlin/Flutter app required.
                                                     ├─ cmux         → control-socket RPC (live mirror)
                                                     └─ Codex        → log + pinned terminal
 ```
+
+<p align="center">
+  <img src="assets/architecture.png" alt="Architecture" width="100%"/>
+</p>
 
 Everything runs **on your own machines** — no cloud, no account. The bridge is loopback-only by
 default; expose it over a trusted LAN or a Tailscale tailnet. Auth is a pairing code + per-device
