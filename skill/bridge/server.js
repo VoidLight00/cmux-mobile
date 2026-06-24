@@ -1949,6 +1949,50 @@ async function handleCmuxScreen(req, res) {
   return jsonResponse(res, 200, { id, text: text || "", hash });
 }
 
+// POST /cmux/input — type text into a cmux terminal by id (Enter unless submit:false).
+async function handleCmuxInput(req, res) {
+  if (req.method !== "POST") return jsonResponse(res, 405, { error: "Method not allowed" });
+  const url = new URL(req.url, `http://${req.headers.host}`);
+  if (!authOk(req, url)) return jsonResponse(res, 401, { error: "Unauthorized" });
+  let body;
+  try { body = await readBody(req); } catch { return jsonResponse(res, 400, { error: "Invalid JSON" }); }
+  const { terminalId, text, submit } = body || {};
+  if (!terminalId || typeof text !== "string") return jsonResponse(res, 400, { error: "Missing terminalId/text" });
+  try { await cmux.sendInput(terminalId, text, submit !== false); return jsonResponse(res, 200, { ok: true }); }
+  catch (e) { return jsonResponse(res, 502, { error: String(e && e.message || e) }); }
+}
+
+// POST /cmux/key — send a named key to a cmux terminal (enter/escape/up/down/left/right/tab/backspace/ctrl-c).
+async function handleCmuxKey(req, res) {
+  if (req.method !== "POST") return jsonResponse(res, 405, { error: "Method not allowed" });
+  const url = new URL(req.url, `http://${req.headers.host}`);
+  if (!authOk(req, url)) return jsonResponse(res, 401, { error: "Unauthorized" });
+  let body;
+  try { body = await readBody(req); } catch { return jsonResponse(res, 400, { error: "Invalid JSON" }); }
+  const { terminalId, key } = body || {};
+  if (!terminalId || !cmux.isNamedKey(key)) return jsonResponse(res, 400, { error: "Missing terminalId or unsupported key" });
+  try { await cmux.sendNamedKey(terminalId, key); return jsonResponse(res, 200, { ok: true }); }
+  catch (e) { return jsonResponse(res, 502, { error: String(e && e.message || e) }); }
+}
+
+// POST /cmux/new — create a new cmux workspace from the phone, optionally running an agent.
+// command is allowlisted (claude|codex|opencode|terminal) so the phone can't inject arbitrary shell.
+async function handleCmuxNew(req, res) {
+  if (req.method !== "POST") return jsonResponse(res, 405, { error: "Method not allowed" });
+  const url = new URL(req.url, `http://${req.headers.host}`);
+  if (!authOk(req, url)) return jsonResponse(res, 401, { error: "Unauthorized" });
+  let body;
+  try { body = await readBody(req); } catch { return jsonResponse(res, 400, { error: "Invalid JSON" }); }
+  const { name, cwd, command } = body || {};
+  const allowed = { claude: "claude", codex: "codex", opencode: "opencode", terminal: "" };
+  const cmd = command == null ? "" : allowed[String(command)];
+  if (cmd === undefined) return jsonResponse(res, 400, { error: "command must be claude|codex|opencode|terminal" });
+  if (name != null && typeof name !== "string") return jsonResponse(res, 400, { error: "name must be a string" });
+  if (cwd != null && typeof cwd !== "string") return jsonResponse(res, 400, { error: "cwd must be a string" });
+  try { await cmux.newWorkspace({ name, cwd, command: cmd || undefined }); return jsonResponse(res, 200, { ok: true }); }
+  catch (e) { return jsonResponse(res, 502, { error: String(e && e.message || e) }); }
+}
+
 // --- cmux events -> SSE (live mirror updates) ------------------------------
 let cmuxEventChild = null;
 let cmuxRespawnTimer = null;
@@ -2014,6 +2058,9 @@ const routes = {
   "GET /pair-code": handlePairCode,
   "GET /cmux/tree": handleCmuxTree,
   "GET /cmux/screen": handleCmuxScreen,
+  "POST /cmux/input": handleCmuxInput,
+  "POST /cmux/key": handleCmuxKey,
+  "POST /cmux/new": handleCmuxNew,
 };
 
 function isLocalRequest(req) {

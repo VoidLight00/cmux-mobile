@@ -84,6 +84,25 @@
   #sheet .add button{ color:var(--orange); padding:0 10px; }
   #sheet .danger{ width:100%; margin-top:14px; padding:12px; border-radius:11px; border:1px solid #4a2a2a; color:var(--red); }
   #sheet .close{ width:100%; margin-top:8px; padding:12px; color:var(--dim); }
+
+  /* cmux workspaces view */
+  #cmux{ flex:1; display:flex; flex-direction:column; overflow:hidden; }
+  #cmux .top{ display:flex; align-items:center; gap:8px; padding:9px 12px; border-bottom:1px solid var(--line); }
+  #cmux .top b{ flex:1; font-size:14px; }
+  #cmux .top button{ color:var(--orange); padding:6px 10px; font-size:13px; }
+  #cmlist{ flex:1; overflow-y:auto; padding:10px 12px; display:flex; flex-direction:column; gap:8px; }
+  .ws{ padding:12px; border-radius:11px; background:var(--card); border:1px solid var(--line); text-align:left; }
+  .ws.sel{ border-color:var(--orange); }
+  .ws b{ display:block; font-size:14px; }
+  .ws small{ color:var(--dim); font-size:12px; }
+  .ws .dotu{ display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--amber); margin-left:6px; }
+  #cmterm{ flex:1; overflow-y:auto; padding:12px 14px; font:12px/1.5 ui-monospace,monospace; white-space:pre-wrap; word-break:break-word; -webkit-overflow-scrolling:touch; }
+  #cmbar{ border-top:1px solid var(--line); padding:8px 10px calc(8px + env(safe-area-inset-bottom)); }
+  #cmbar .keys{ display:flex; gap:6px; overflow-x:auto; margin-bottom:7px; -webkit-overflow-scrolling:touch; }
+  #cmbar .keys button{ flex:none; padding:7px 11px; border-radius:9px; background:var(--card); border:1px solid var(--line); font-size:12px; }
+  #cmbar .row{ display:flex; gap:8px; }
+  #cmbar input{ flex:1; background:var(--card); border:1px solid var(--line); border-radius:11px; color:var(--txt); padding:10px 12px; font-size:15px; }
+  #cmbar .row button{ padding:0 15px; border-radius:11px; background:var(--orange); color:#fff; font-weight:600; }
 </style>
 </head>
 <body>
@@ -102,11 +121,38 @@
   <span class="dot" id="dot"></span>
   <div><b id="mac">Mac</b> <span class="sub" id="agents"></span></div>
   <span class="grow"></span>
+  <button class="ic" id="wsBtn" title="cmux 워크스페이스">▦</button>
   <button class="ic" id="macsBtn" title="Macs">⌂</button>
   <button class="ic" id="menuBtn" title="설정">⋮</button>
 </header>
 <div id="tabs" class="hidden"></div>
 <div id="term" class="hidden"></div>
+
+<!-- cmux workspaces -->
+<section id="cmux" class="hidden">
+  <div class="top">
+    <button id="cmBack" class="hidden">‹ 뒤로</button>
+    <b id="cmTitle">cmux 워크스페이스</b>
+    <button id="cmNew">+ 새 세션</button>
+    <button id="cmRefresh">↻</button>
+  </div>
+  <div id="cmlist"></div>
+  <div id="cmterm" class="hidden"></div>
+  <div id="cmbar" class="hidden">
+    <div class="keys">
+      <button data-k="enter">⏎</button>
+      <button data-k="escape">Esc</button>
+      <button data-k="ctrl-c">Ctrl-C</button>
+      <button data-k="up">↑</button>
+      <button data-k="down">↓</button>
+      <button data-k="tab">Tab</button>
+    </div>
+    <div class="row">
+      <input id="cmInput" placeholder="이 터미널에 입력…" enterkeyhint="send">
+      <button id="cmSend">전송</button>
+    </div>
+  </div>
+</section>
 
 <!-- Approval -->
 <div id="approve" class="hidden">
@@ -203,6 +249,7 @@ function connect(){
   on('stop', d=> push(d.sessionId,[{t:'— stopped —',c:'system'}]));
   on('task-complete', d=> push(d.sessionId,[{t:'✓ 작업 완료',c:'system'}]));
   on('error', d=> push(d.sessionId,[{t:(d.error||'error'),c:'error'}]));
+  on('cmux-event', ()=>{ if(!$('#cmux').classList.contains('hidden') && !cmTermId) loadCmux(); });
 }
 function setDot(ok){ const d=$('#dot'); d.classList.toggle('on',ok); d.classList.toggle('off',!ok); }
 
@@ -428,6 +475,80 @@ $('#menuBtn').onclick=()=>{
 };
 function closeSheet(){ $('#sheet').classList.add('hidden'); }
 $('#sheet').addEventListener('click', e=>{ if(e.target.id==='sheet') closeSheet(); });
+
+/* ---------- cmux workspaces (real names + control + new session) ---------- */
+let cmWs = [];          // workspace list from /cmux/tree
+let cmTermId = null;    // active terminal id (null = list view)
+let cmPollTimer = null;
+function showCmux(on){
+  $('#cmux').classList.toggle('hidden', !on);
+  ['#tabs','#term','#bar'].forEach(s=>$(s).classList.toggle('hidden', on));
+  if(on){ $('#approve').classList.add('hidden'); cmListView(); loadCmux(); }
+  else { stopCmPoll(); render(); }
+}
+async function loadCmux(){
+  try{
+    const r = await fetch('/cmux/tree',{ headers:{ 'Authorization':'Bearer '+token } });
+    const d = await r.json();
+    cmWs = (d && d.available && Array.isArray(d.workspaces)) ? d.workspaces : [];
+  }catch(e){ cmWs = []; }
+  renderCmList();
+}
+function cmListView(){
+  cmTermId = null; stopCmPoll();
+  $('#cmlist').classList.remove('hidden'); $('#cmterm').classList.add('hidden'); $('#cmbar').classList.add('hidden');
+  $('#cmBack').classList.add('hidden'); $('#cmNew').classList.remove('hidden');
+  $('#cmTitle').textContent = 'cmux 워크스페이스';
+}
+function renderCmList(){
+  const el = $('#cmlist'); el.innerHTML = '';
+  if(!cmWs.length){ el.innerHTML = '<small style="color:var(--dim)">cmux 워크스페이스 없음 — Mac에서 cmux 실행 중인지 확인</small>'; return; }
+  cmWs.forEach(w=>{
+    const t = (w.terminals && w.terminals[0]) || null;
+    const b = document.createElement('button'); b.className = 'ws'+(w.selected?' sel':'');
+    b.innerHTML = '<b>'+esc(w.title||'workspace')+(w.hasUnread?'<span class="dotu"></span>':'')+'</b>'+
+      '<small>'+esc(w.cwd||'')+' · 터미널 '+((w.terminals||[]).length)+'</small>';
+    b.onclick = ()=>{ if(t) openCmTerm(t.id, w.title); };
+    el.appendChild(b);
+  });
+}
+function openCmTerm(id, title){
+  cmTermId = id;
+  $('#cmlist').classList.add('hidden'); $('#cmterm').classList.remove('hidden'); $('#cmbar').classList.remove('hidden');
+  $('#cmBack').classList.remove('hidden'); $('#cmNew').classList.add('hidden');
+  $('#cmTitle').textContent = title || '터미널';
+  pollCmScreen(); startCmPoll();
+}
+async function pollCmScreen(){
+  if(!cmTermId) return;
+  try{
+    const r = await fetch('/cmux/screen?id='+encodeURIComponent(cmTermId),{ headers:{ 'Authorization':'Bearer '+token } });
+    const d = await r.json(); const el = $('#cmterm');
+    const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 40;
+    el.textContent = d.text || '';
+    if(atBottom) el.scrollTop = el.scrollHeight;
+  }catch(e){}
+}
+function startCmPoll(){ stopCmPoll(); cmPollTimer = setInterval(pollCmScreen, 1500); }
+function stopCmPoll(){ if(cmPollTimer){ clearInterval(cmPollTimer); cmPollTimer = null; } }
+async function cmSendText(){
+  const inp = $('#cmInput'); const t = inp.value; if(!t || !cmTermId) return; inp.value = '';
+  try{ await post('/cmux/input',{ terminalId:cmTermId, text:t }); setTimeout(pollCmScreen, 300); }catch(e){}
+}
+async function cmSendKey(k){ if(!cmTermId) return; try{ await post('/cmux/key',{ terminalId:cmTermId, key:k }); setTimeout(pollCmScreen, 300); }catch(e){} }
+async function cmNew(){
+  const provider = prompt('새 세션: claude / codex / opencode / terminal', 'claude'); if(provider===null) return;
+  const name = prompt('워크스페이스 이름 (선택)', '') || undefined;
+  try{ await post('/cmux/new',{ command:(provider.trim()||'terminal'), name }); setTimeout(()=>{ cmListView(); loadCmux(); }, 900); }
+  catch(e){ alert('세션 생성 실패'); }
+}
+$('#wsBtn').onclick = ()=> showCmux($('#cmux').classList.contains('hidden'));
+$('#cmBack').onclick = ()=> cmListView();
+$('#cmRefresh').onclick = ()=>{ if(cmTermId) pollCmScreen(); else loadCmux(); };
+$('#cmNew').onclick = cmNew;
+$('#cmSend').onclick = cmSendText;
+$('#cmInput').addEventListener('keydown', e=>{ if(e.key==='Enter') cmSendText(); });
+document.querySelectorAll('#cmbar .keys button').forEach(b=> b.onclick = ()=> cmSendKey(b.dataset.k));
 
 /* ---------- boot ---------- */
 async function boot(){

@@ -321,6 +321,7 @@ const KEY_SEQUENCES = {
   escape: "\x1b",
   tab: "\t",
   backspace: "\x7f",
+  "ctrl-c": "\x03",
 };
 
 export function isNamedKey(key) {
@@ -332,6 +333,18 @@ export async function sendNamedKey(terminalId, key) {
   const seq = KEY_SEQUENCES[key];
   if (seq === undefined) throw new Error(`unsupported key: ${key}`);
   await rpc("mobile.terminal.input", { terminal_id: terminalId, text: seq });
+}
+
+// Create a new cmux workspace from the phone. Optionally name it, set its cwd,
+// and run an agent/command (e.g. command="claude" or "codex" starts that agent
+// in the new workspace by typing it + Enter). Returns cmux's stdout.
+export async function newWorkspace({ name, cwd, command } = {}) {
+  if (!CMUX_BIN) throw new Error("cmux binary not found");
+  const args = ["new-workspace", "--focus", "true"];
+  if (name) args.push("--name", String(name));
+  if (cwd) args.push("--cwd", String(cwd));
+  if (command) args.push("--command", String(command));
+  return cmux(args);
 }
 
 // Stream cmux events (newline-delimited JSON). Calls onEvent(obj) per frame.
