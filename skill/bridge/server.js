@@ -279,7 +279,8 @@ function jsonResponse(res, status, body) {
   res.end(payload);
 }
 
-const MAX_BODY_BYTES = 4 * 1024 * 1024; // 4 MB cap — transcripts can be large
+const MAX_BODY_BYTES = 8 * 1024 * 1024; // JSON + small image uploads
+const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
 
 function readBody(req) {
   return new Promise((resolve, reject) => {
@@ -1808,6 +1809,23 @@ async function handleSupervise(req, res) {
   return jsonResponse(res, 200, { supervise: superviseMode });
 }
 
+async function handleUpload(req, res) {
+  if (req.method !== "POST") return jsonResponse(res, 405, { error: "Method not allowed" });
+  if (!requireAuth(req)) return jsonResponse(res, 401, { error: "Unauthorized" });
+  let body;
+  try { body = await readBody(req); } catch { return jsonResponse(res, 400, { error: "Invalid JSON" }); }
+  const name = String(body.name || "image.png").replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 80) || "image.png";
+  const m = String(body.data || "").match(/^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/);
+  if (!m) return jsonResponse(res, 400, { error: "Expected image data URL" });
+  const bytes = Buffer.from(m[2], "base64");
+  if (!bytes.length || bytes.length > MAX_UPLOAD_BYTES) return jsonResponse(res, 413, { error: "Image too large" });
+  const dir = path.join(os.homedir(), "Library", "Application Support", "cmux-iphone", "uploads");
+  fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
+  const filePath = path.join(dir, `${Date.now()}-${crypto.randomBytes(3).toString("hex")}-${name}`);
+  fs.writeFileSync(filePath, bytes, { mode: 0o600 });
+  return jsonResponse(res, 200, { ok: true, path: filePath, type: m[1], bytes: bytes.length });
+}
+
 // Public liveness probe — NO auth, NO sensitive data (no session list/cwd).
 function handleHealth(_req, res) {
   return jsonResponse(res, 200, {
@@ -2041,6 +2059,7 @@ const routes = {
   "GET /icons/icon-maskable-512.png": handlePwaAsset,
   "POST /pair": handlePair,
   "POST /command": handleCommand,
+  "POST /upload": handleUpload,
   "GET /events": handleEvents,
   "POST /hooks/tool-output": handleHookToolOutput,
   "POST /hooks/permission": handleHookPermission,

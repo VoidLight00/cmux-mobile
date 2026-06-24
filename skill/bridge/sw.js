@@ -9,7 +9,7 @@
  * ponytail: shell-only cache, no precache versioning beyond a name bump. If the
  * shell ever needs offline-first or background sync, add a real strategy then.
  */
-const CACHE = "cmux-shell-v2";
+const CACHE = "cmux-shell-v3";
 const SHELL = ["/", "/manifest.webmanifest", "/icons/icon-192.png", "/icons/icon-512.png"];
 
 self.addEventListener("install", (e) => {
