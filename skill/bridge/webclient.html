@@ -37,6 +37,7 @@
     background:var(--card); border:1px solid var(--line); border-radius:12px; color:var(--txt); padding:12px; }
   #pair .err{ color:var(--red); font-size:13px; min-height:16px; }
   #pair small{ color:var(--dim); font-size:12px; }
+  #pair .link{ color:var(--orange); font-size:13px; padding:6px 8px; }
 
   /* Session tabs */
   #tabs{ display:flex; gap:7px; overflow-x:auto; padding:9px 12px; border-bottom:1px solid var(--line); -webkit-overflow-scrolling:touch; }
@@ -103,6 +104,7 @@
   #cmbar .row{ display:flex; gap:8px; }
   #cmbar input{ flex:1; background:var(--card); border:1px solid var(--line); border-radius:11px; color:var(--txt); padding:10px 12px; font-size:15px; }
   #cmbar .row button{ padding:0 15px; border-radius:11px; background:var(--orange); color:#fff; font-weight:600; }
+  #updateBtn{ position:fixed; left:12px; right:12px; bottom:calc(12px + env(safe-area-inset-bottom)); z-index:30; padding:12px; border-radius:12px; background:var(--orange); color:#fff; font-weight:700; box-shadow:0 8px 24px rgba(0,0,0,.35); }
 </style>
 </head>
 <body>
@@ -114,6 +116,7 @@
   <input id="code" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="000000" autocomplete="one-time-code">
   <div class="err" id="pairerr"></div>
   <small id="pairhost"></small>
+  <button class="link" id="macsPairBtn">저장된 주소</button>
 </section>
 
 <!-- Main -->
@@ -169,6 +172,7 @@
 
 <!-- Sheet -->
 <div id="sheet" class="hidden"><div class="panel" id="sheetPanel"></div></div>
+<button id="updateBtn" class="hidden">새 버전 업데이트</button>
 
 <script>
 "use strict";
@@ -447,6 +451,7 @@ function rememberMac(name){
   if(!m.find(x=>x.url===url)){ m.push({name:name||location.host, url}); setMacs(m); }
 }
 $('#macsBtn').onclick=()=>openMacs();
+$('#macsPairBtn').onclick=()=>openMacs();
 function openMacs(){
   const m=getMacs(); const p=$('#sheetPanel');
   p.innerHTML='<h3>Macs</h3>';
@@ -480,6 +485,7 @@ $('#sheet').addEventListener('click', e=>{ if(e.target.id==='sheet') closeSheet(
 let cmWs = [];          // workspace list from /cmux/tree
 let cmTermId = null;    // active terminal id (null = list view)
 let cmPollTimer = null;
+const cmLastInput = new Map();
 function showCmux(on){
   $('#cmux').classList.toggle('hidden', !on);
   ['#tabs','#term','#bar'].forEach(s=>$(s).classList.toggle('hidden', on));
@@ -533,9 +539,16 @@ function startCmPoll(){ stopCmPoll(); cmPollTimer = setInterval(pollCmScreen, 15
 function stopCmPoll(){ if(cmPollTimer){ clearInterval(cmPollTimer); cmPollTimer = null; } }
 async function cmSendText(){
   const inp = $('#cmInput'); const t = inp.value; if(!t || !cmTermId) return; inp.value = '';
+  cmLastInput.set(cmTermId, t);
   try{ await post('/cmux/input',{ terminalId:cmTermId, text:t }); setTimeout(pollCmScreen, 300); }catch(e){}
 }
-async function cmSendKey(k){ if(!cmTermId) return; try{ await post('/cmux/key',{ terminalId:cmTermId, key:k }); setTimeout(pollCmScreen, 300); }catch(e){} }
+function restoreCmInput(){
+  const inp = $('#cmInput'); const t = cmLastInput.get(cmTermId);
+  if(!cmTermId || inp.value || !t) return false;
+  inp.value = t; inp.focus(); inp.setSelectionRange(t.length, t.length);
+  return true;
+}
+async function cmSendKey(k){ if(k==='escape' && restoreCmInput()) return; if(!cmTermId) return; try{ await post('/cmux/key',{ terminalId:cmTermId, key:k }); setTimeout(pollCmScreen, 300); }catch(e){} }
 async function cmNew(){
   const provider = prompt('새 세션: claude / codex / opencode / terminal', 'claude'); if(provider===null) return;
   const name = prompt('워크스페이스 이름 (선택)', '') || undefined;
@@ -568,8 +581,18 @@ boot();
  * install this as a standalone app. Only registers in a secure context
  * (https or localhost) — over a plain-http Tailscale/LAN IP it's a no-op and
  * the page still works as a normal browser tab. Use `tailscale serve` for https. */
+function showUpdate(){ $('#updateBtn').classList.remove('hidden'); }
 if('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost' || location.hostname==='127.0.0.1')){
-  addEventListener('load', ()=> navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', ()=>{ if(refreshing) return; refreshing = true; location.reload(); });
+  $('#updateBtn').onclick=()=> navigator.serviceWorker.getRegistration().then(r=>{ if(r && r.waiting) r.waiting.postMessage({type:'SKIP_WAITING'}); else location.reload(); });
+  addEventListener('load', ()=> navigator.serviceWorker.register('/sw.js').then(registration=>{
+    if(registration.waiting) showUpdate();
+    registration.addEventListener('updatefound', ()=>{
+      const sw = registration.installing;
+      if(sw) sw.addEventListener('statechange', ()=>{ if(sw.state==='installed' && navigator.serviceWorker.controller) showUpdate(); });
+    });
+  }).catch(()=>{}));
 }
 </script>
 </body>
