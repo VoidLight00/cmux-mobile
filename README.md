@@ -82,12 +82,12 @@ The bridge binds to loopback by default. Expose it on the interface you'll conne
 ```bash
 node bin/cmux-iphone.js status                 # shows your LAN + Tailscale addresses
 node bin/cmux-iphone.js setup --bind 100.x.y.z # bind to your Tailscale IP (encrypted, recommended)
-# or --lan for the whole local network (plaintext — trusted networks only)
+# or --lan / --hotspot for the whole local network (plaintext — trusted networks only)
 ```
 
-- **Same Wi-Fi:** use the LAN address from `status` (e.g. `http://192.168.x.x:7860/`).
+- **Same Wi-Fi:** use any LAN address from `status` (e.g. `http://192.168.x.x:7860/`).
 - **Anywhere:** install [Tailscale](https://tailscale.com) on Mac + phone (same account), use the `100.x.y.z` address.
-- **Phone hotspot / tethering:** bind `0.0.0.0` and connect on the hotspot-subnet address `status` reports.
+- **Phone hotspot / tethering:** run `setup --hotspot`, then connect on the hotspot-subnet address `status` reports.
 
 ### 3. Connect from your phone
 

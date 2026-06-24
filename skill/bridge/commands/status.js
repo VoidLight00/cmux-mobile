@@ -2,7 +2,7 @@
 
 import { getConfig } from "../lib/config.js";
 import { api, readAnyToken, findBridgePort } from "../lib/bridge-client.js";
-import { lanIPv4, tailscaleIPv4 } from "../lib/sys.js";
+import { lanIPv4s, tailscaleIPv4 } from "../lib/sys.js";
 
 export async function run() {
   const cfg = getConfig();
@@ -17,9 +17,9 @@ export async function run() {
   }
 
   console.log(`Runner:    ${cfg.runner || "(unset — run 'cmux-iphone setup')"}`);
-  const lan = lanIPv4();
+  const lans = lanIPv4s();
   const ts = tailscaleIPv4();
-  if (lan) console.log(`API (LAN): http://${lan}:${port}`);
+  for (const ip of lans) console.log(`API (LAN): http://${ip}:${port}`);
   if (ts) console.log(`Tailscale: http://${ts}:${port}`);
 
   const token = readAnyToken();

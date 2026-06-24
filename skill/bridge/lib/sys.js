@@ -4,14 +4,21 @@ import os from "node:os";
 import fs from "node:fs";
 import { execFileSync } from "node:child_process";
 
-export function lanIPv4() {
+function isTailscaleIPv4(ip) {
+  const [a, b] = ip.split(".").map(Number);
+  return a === 100 && b >= 64 && b <= 127;
+}
+
+export function lanIPv4s() {
   const ifaces = os.networkInterfaces();
-  for (const name of Object.keys(ifaces)) {
-    for (const a of ifaces[name] || []) {
-      if (a.family === "IPv4" && !a.internal && !a.address.startsWith("169.254")) return a.address;
-    }
-  }
-  return null;
+  return Object.values(ifaces)
+    .flatMap((addrs) => addrs || [])
+    .filter((a) => a.family === "IPv4" && !a.internal && !a.address.startsWith("169.254") && !isTailscaleIPv4(a.address))
+    .map((a) => a.address);
+}
+
+export function lanIPv4() {
+  return lanIPv4s()[0] || null;
 }
 
 export function tailscaleIPv4() {

@@ -81,12 +81,12 @@ node bin/cmux-iphone.js pair      # 본인의 6자리 페어링 코드 출력
 ```bash
 node bin/cmux-iphone.js status                 # 본인 LAN·Tailscale 주소 표시
 node bin/cmux-iphone.js setup --bind 100.x.y.z # 본인 Tailscale IP에 바인드(암호화, 권장)
-# 또는 --lan 으로 로컬 네트워크 전체(평문 — 신뢰 네트워크에서만)
+# 또는 --lan / --hotspot 으로 로컬 네트워크 전체(평문 — 신뢰 네트워크에서만)
 ```
 
-- **같은 Wi-Fi:** `status`의 LAN 주소 사용 (예: `http://192.168.x.x:7860/`).
+- **같은 Wi-Fi:** `status`의 LAN 주소 중 하나 사용 (예: `http://192.168.x.x:7860/`).
 - **어디서나:** 맥·폰에 [Tailscale](https://tailscale.com)을 같은 계정으로 설치 후 `100.x.y.z` 주소 사용.
-- **폰 핫스팟/테더링:** `0.0.0.0`에 바인드하고 `status`가 알려주는 핫스팟 서브넷 주소로 접속.
+- **폰 핫스팟/테더링:** `setup --hotspot` 실행 후 `status`가 알려주는 핫스팟 서브넷 주소로 접속.
 
 ### 3. 폰에서 접속
 

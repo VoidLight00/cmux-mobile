@@ -8,7 +8,7 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { getConfig, saveConfig, getRuntime, paths } from "../lib/config.js";
-import { which, lanIPv4, tailscaleIPv4 } from "../lib/sys.js";
+import { which, lanIPv4s, tailscaleIPv4 } from "../lib/sys.js";
 import { api, controlApi, bridgeUp } from "../lib/bridge-client.js";
 import * as cmux from "../cmux.js";
 
@@ -83,7 +83,7 @@ export async function run(args = []) {
   let bindAddress;
   if (process.env.HOST) bindAddress = process.env.HOST;
   else if (bindIdx !== -1 && args[bindIdx + 1]) bindAddress = args[bindIdx + 1];
-  else if (args.includes("--lan")) bindAddress = "0.0.0.0";
+  else if (args.includes("--lan") || args.includes("--hotspot")) bindAddress = "0.0.0.0";
   else bindAddress = cfg.bindAddress || "127.0.0.1";
   saveConfig({ bindAddress });
   const localOnly = bindAddress === "127.0.0.1" || bindAddress === "::1";
@@ -170,14 +170,14 @@ export async function run(args = []) {
   // 8) Pair info — show ONLY addresses that actually reach the bound interface,
   // so a loopback-only bridge never advertises a LAN/Tailscale URL that refuses.
   console.log("\nPair your iPhone:");
-  const lan = lanIPv4();
+  const lans = lanIPv4s();
   const ts = tailscaleIPv4();
   if (localOnly) {
     console.log("  Bridge is LOCAL-ONLY (127.0.0.1) — not reachable from your phone yet.");
     console.log("  Expose it first (see the 'bind:' note above), then re-run setup.");
   } else if (wholeLan) {
     if (ts) console.log(`  Tailscale: http://${ts}:${apiPort}   (encrypted — preferred)`);
-    if (lan) console.log(`  LAN:       http://${lan}:${apiPort}   (plaintext)`);
+    for (const ip of lans) console.log(`  LAN:       http://${ip}:${apiPort}   (plaintext)`);
   } else {
     console.log(`  Bridge:    http://${bindAddress}:${apiPort}`);
   }
