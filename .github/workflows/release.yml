@@ -61,7 +61,7 @@ jobs:
         # Skips cleanly when the tap PAT isn't configured (first release / forks).
         # Set the COMMITTER_TOKEN secret to enable automatic formula bumps.
         if: ${{ env.HAS_TAP_TOKEN == 'true' }}
-        uses: mislav/bump-homebrew-formula-action@56a283fa15557e9abaa4bdb63b8212abc68e655c # v3.6
+        uses: mislav/bump-homebrew-formula-action@ccf2332299a883f6af50a1d2d41e5df7904dd769 # v4.1
         with:
           formula-name: cmux-iphone
           homebrew-tap: ${{ github.repository_owner }}/homebrew-tap
